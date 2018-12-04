@@ -1,6 +1,6 @@
 from socket import *
 from config import *
-from character import *
+from character import Character, JOBS
 from subprocess import call
 from sys import stdin
 
@@ -10,7 +10,7 @@ def get_input():
 
 client = socket(AF_INET, SOCK_STREAM)
 
-client.connect(('127.0.0.1', 3726)) # Should be SERVER_IP in real clients
+client.connect((HOST_IP, APP_PORT)) # Should be SERVER_IP in real clients
 
 while True:
     call(clear, shell=True)
@@ -34,5 +34,7 @@ while True:
         print(a.stats_display())
         print("Is this OK? (y/n)")
         input = get_input()
+        if input.startswith('y'):
+            client.send(a.to_json().encode("utf8"))
     else:
         pass

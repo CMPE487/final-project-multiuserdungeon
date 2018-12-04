@@ -1,3 +1,5 @@
+import json
+
 class Job:
     def __init__(self, copy=None):
         if copy is None:
@@ -29,10 +31,23 @@ class Mage(Job):
         self.spd += 2
 
 class Character(Job):
-    def __init__(self, name, job):
+    def __init__(self, name="Mark", job=Job(), json_data=None):
+        if json_data:
+            data = json.loads(json_data)
+            name = data['name']
+            job = JOBS[data['job_index']]
         Job.__init__(self, job)
         self.name = name
         self.jobname = job.name
+
+    def to_json(self):
+        job_i = 0
+        if self.jobname == "Warrior":
+            job_i = 0
+        elif self.jobname == "Mage":
+            job_i = 1
+        data = {'name': self.name, 'job_index': job_i}
+        return json.dumps(data)
 
 JOBS = [Warrior(), Mage()]
 
