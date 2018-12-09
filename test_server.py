@@ -3,14 +3,19 @@ from config import *
 from character import Character, JOBS
 from threading import Thread
 
+userlist = {}
+
 def handle_client(client, client_addr):
     while True:
         try:
             msg = client.recv(BUFFER_SIZE)
-            a = Character(json_data=msg.decode("utf8"))
-            print("{addr} says:".format(addr=client_addr))
-            print("{name} is a {job}".format(name=a.name, job=a.jobname))
-            print(a.stats_display())
+            msg = msg.decode("utf8").split(";", 3)
+            if (msg[1] == 'create'):
+                a = Character(json_data=msg[2])
+                userlist[msg[0]] = a
+            elif (msg[1] == 'show'):
+                for k, v in userlist.items():
+                    print(k + " : " + v.name)
         except ConnectionResetError:
             continue
 

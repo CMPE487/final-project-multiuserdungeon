@@ -15,9 +15,10 @@ client.connect((HOST_IP, APP_PORT)) # Should be SERVER_IP in real clients
 while True:
     call(clear, shell=True)
     print("Welcome!")
-    print("Would you like to make a character? (y/n)")
+    print("1. Make a character")
+    print("2. Show userlist")
     input = get_input()
-    if input.startswith('y'):
+    if input.startswith('1'):
         print("Enter your name")
         name = get_input()
         print("Choose a class (1, 2..)")
@@ -35,6 +36,6 @@ while True:
         print("Is this OK? (y/n)")
         input = get_input()
         if input.startswith('y'):
-            client.send(a.to_json().encode("utf8"))
-    else:
-        pass
+            client.send((HOST_IP + ";create;" + a.to_json()).encode("utf8"))
+    elif input.startswith('2'):
+        client.send((HOST_IP + ";show;").encode("utf8"))
