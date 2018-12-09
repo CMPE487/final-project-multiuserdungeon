@@ -1,18 +1,14 @@
-import json
+import Map
 
-class Job:
-    def __init__(self, copy=None):
-        if copy is None:
-            self.name = "Adventurer"
-            self.hp, self.mp = 10, 10
-            self.str, self.end, self.int, self.spd = 5, 5, 5, 5
-        else:
-            self.name = copy.name
-            self.hp, self.mp = copy.hp, copy.mp
-            self.str, self.end, self.int, self.spd = copy.str, copy.end, copy.int, copy.spd
+class Job(object):
+    def __init__(self):
+        self.name = "Adventurer"
+        self.hp, self.mp = 10, 10
+        self.str, self.end, self.int, self.spd = 5, 5, 5, 5
+        self.x, self.y = 0, 0
     def stats_display(self):
-        return "HP: {0} MP: {1}\nStr:{2} End:{3} Int:{4} Spd:{5}".format(
-            self.hp, self.mp, self.str, self.end, self.int, self.spd)
+        return "HP: {0} MP: {1}\nStr:{2} End:{3} Int:{4} Spd:{5} \n X:{6} Y:{7}".format(
+            self.hp, self.mp, self.str, self.end, self.int, self.spd, self.x , self.y)
 
 class Warrior(Job):
     def __init__(self):
@@ -30,31 +26,22 @@ class Mage(Job):
         self.int += 3
         self.spd += 2
 
-class Character(Job):
-    def __init__(self, name="Mark", job=Job(), json_data=None):
-        if json_data:
-            data = json.loads(json_data)
-            name = data['name']
-            job = JOBS[data['job_index']]
-        Job.__init__(self, job)
+class Character(object):
+    def __init__(self, name, job):
         self.name = name
+        self.job = job
         self.jobname = job.name
+    def stats_display(self):
+        return self.job.stats_display()
 
-    def to_json(self):
-        job_i = 0
-        if self.jobname == "Warrior":
-            job_i = 0
-        elif self.jobname == "Mage":
-            job_i = 1
-        data = {'name': self.name, 'job_index': job_i}
-        return json.dumps(data)
-
-JOBS = [Warrior(), Mage()]
-
-#a = Character("John", Warrior())
-#b = Character("Jane", Mage())
-#print("{name} is a {job}".format(name=a.name, job=a.jobname))
-#print(a.stats_display())
-#print("--~--~--~--~--~--")
-#print("{name} is a {job}".format(name=b.name, job=b.jobname))
-#print(b.stats_display())
+    def move(self,dir):
+        if((dir == 'N') & (self.job.y  < Map.MAP_HEIGHT)):
+            self.job.y +=1
+        elif((dir == 'S') & (0 < self.job.y)):
+            self.job.y -=1
+        elif((dir == 'W') & (0 < self.job.x)):
+            self.job.x -=1
+        elif((dir == 'E') & (self.job.x  < Map.MAP_WIDTH)):
+            self.job.x +=1
+        else:
+            print("You can't move!")
