@@ -1,5 +1,11 @@
 from random import randint
-from config import *
+
+MAP_WIDTH = 8
+MAP_HEIGHT = 8
+TOTAL_ROOM_TYPES = 3
+ROOM_GRASS = 1
+ROOM_ROCK =2
+ROOM_WATER = 3
 
 class Room(object):
     def __init__(self,x,y,type):
@@ -55,3 +61,4 @@ class Map(object):
         print()
 
 MAP_ROOMS = [[Room(0,0,0) for x in range(MAP_WIDTH)] for y in range(MAP_HEIGHT)]
+
