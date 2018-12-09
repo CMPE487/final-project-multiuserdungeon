@@ -16,6 +16,10 @@ def handle_client(client, client_addr):
             elif (msg[1] == 'show'):
                 for k, v in userlist.items():
                     print(k + " : " + v.name)
+            elif (msg[1] == 'move'):
+                char = userlist[msg[0]]
+                char.move(msg[2])
+                print(char.position())
         except ConnectionResetError:
             continue
 

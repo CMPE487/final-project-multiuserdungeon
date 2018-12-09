@@ -1,4 +1,5 @@
 import json
+from config import MAP_WIDTH, MAP_HEIGHT
 
 class Job:
     def __init__(self, copy=None):
@@ -39,6 +40,10 @@ class Character(Job):
         Job.__init__(self, job)
         self.name = name
         self.jobname = job.name
+        self.x, self.y = 0, 0
+
+    def position(self):
+        return "X{0} Y:{1}".format(self.x, self.y)
 
     def to_json(self):
         job_i = 0
@@ -48,6 +53,18 @@ class Character(Job):
             job_i = 1
         data = {'name': self.name, 'job_index': job_i}
         return json.dumps(data)
+
+    def move(self,dir):
+        if((dir == 'N') & (self.y  < MAP_HEIGHT)):
+            self.y +=1
+        elif((dir == 'S') & (0 < self.y)):
+            self.y -=1
+        elif((dir == 'W') & (0 < self.x)):
+            self.x -=1
+        elif((dir == 'E') & (self.x  < MAP_WIDTH)):
+            self.x +=1
+        else:
+            print("You can't move!")
 
 JOBS = [Warrior(), Mage()]
 
