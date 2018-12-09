@@ -12,3 +12,11 @@ MAX_CLIENTS = 10
 clear = 'clear'
 if os.name == 'nt':
     clear = 'cls'
+
+# Map variables
+MAP_WIDTH = 8
+MAP_HEIGHT = 8
+TOTAL_ROOM_TYPES = 3
+ROOM_GRASS = 1
+ROOM_ROCK =2
+ROOM_WATER = 3

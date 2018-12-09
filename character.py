@@ -1,14 +1,13 @@
-import Map
+from config import MAP_WIDTH, MAP_HEIGHT
 
 class Job(object):
     def __init__(self):
         self.name = "Adventurer"
         self.hp, self.mp = 10, 10
         self.str, self.end, self.int, self.spd = 5, 5, 5, 5
-        self.x, self.y = 0, 0
     def stats_display(self):
-        return "HP: {0} MP: {1}\nStr:{2} End:{3} Int:{4} Spd:{5} \n X:{6} Y:{7}".format(
-            self.hp, self.mp, self.str, self.end, self.int, self.spd, self.x , self.y)
+        return "HP: {0} MP: {1}\nStr:{2} End:{3} Int:{4} Spd:{5}".format(
+            self.hp, self.mp, self.str, self.end, self.int, self.spd)
 
 class Warrior(Job):
     def __init__(self):
@@ -31,17 +30,19 @@ class Character(object):
         self.name = name
         self.job = job
         self.jobname = job.name
+        self.x, self.y = 0, 0
+
     def stats_display(self):
-        return self.job.stats_display()
+        return self.job.stats_display() + "X:{0} Y:{1}".format(self.x, self.y)
 
     def move(self,dir):
-        if((dir == 'N') & (self.job.y  < Map.MAP_HEIGHT)):
-            self.job.y +=1
-        elif((dir == 'S') & (0 < self.job.y)):
-            self.job.y -=1
-        elif((dir == 'W') & (0 < self.job.x)):
-            self.job.x -=1
-        elif((dir == 'E') & (self.job.x  < Map.MAP_WIDTH)):
-            self.job.x +=1
+        if((dir == 'N') & (self.y  < MAP_HEIGHT)):
+            self.y +=1
+        elif((dir == 'S') & (0 < self.y)):
+            self.y -=1
+        elif((dir == 'W') & (0 < self.x)):
+            self.x -=1
+        elif((dir == 'E') & (self.x  < MAP_WIDTH)):
+            self.x +=1
         else:
             print("You can't move!")
