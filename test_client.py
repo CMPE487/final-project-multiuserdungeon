@@ -42,6 +42,8 @@ def test_commands(client):
         input = get_input()
         if input.startswith('1'):
             client.send((HOST_IP + ";show;").encode("utf8"))
+            print(client.recv(BUFFER_SIZE).decode("utf8"))
+            get_input()
         elif input.startswith('2'):
             print("Where?")
             dir = get_input()

@@ -12,12 +12,12 @@ def handle_client(client, client_addr):
             msg = msg.decode("utf8").split(";", 3)
             if (msg[1] == 'create'):
                 a = Character(json_data=msg[2])
-                userlist[msg[0]] = a
+                userlist[msg[0]] = {"character": a, "client": client}
             elif (msg[1] == 'show'):
                 for k, v in userlist.items():
-                    print(k + " : " + v.name)
+                    userlist[msg[0]]["client"].send((f"{k} : {v['character'].name}").encode("utf8"))
             elif (msg[1] == 'move'):
-                char = userlist[msg[0]]
+                char = userlist[msg[0]]["character"]
                 char.move(msg[2])
                 print(char.position())
         except ConnectionResetError:
