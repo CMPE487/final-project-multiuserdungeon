@@ -1,6 +1,6 @@
 import json
 from character_jobs import *
-from config import MAP_WIDTH, MAP_HEIGHT
+from config import MapConfig
 
 class Character(Job):
     def __init__(self, name="Mark", job=Job(), json_data=None):
@@ -26,13 +26,13 @@ class Character(Job):
         return json.dumps(data)
 
     def move(self,dir):
-        if((dir == 'N') & (self.y  < MAP_HEIGHT)):
+        if((dir == 'N') & (self.y  < MapConfig.HEIGHT)):
             self.y +=1
         elif((dir == 'S') & (0 < self.y)):
             self.y -=1
         elif((dir == 'W') & (0 < self.x)):
             self.x -=1
-        elif((dir == 'E') & (self.x  < MAP_WIDTH)):
+        elif((dir == 'E') & (self.x  < MapConfig.WIDTH)):
             self.x +=1
         else:
             print("You can't move!")

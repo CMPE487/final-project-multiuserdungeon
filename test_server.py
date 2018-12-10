@@ -2,6 +2,7 @@ from socket import *
 from config import *
 from character import Character, JOBS
 from threading import Thread
+from map import Map
 
 userlist = {}
 
@@ -20,12 +21,18 @@ def handle_client(client, client_addr):
                 char = userlist[msg[0]]["character"]
                 char.move(msg[2])
                 print(char.position())
+            elif (msg[1] == 'map'):
+                char = userlist[msg[0]]['character']
+                userlist[msg[0]]['client'].send(world.ROOMS[char.x][char.y].display().encode("utf8"))
         except ConnectionResetError:
             continue
 
 server = socket(AF_INET, SOCK_STREAM)
 server.bind((HOST_IP, APP_PORT))
 server.listen(MAX_CLIENTS)
+
+world = Map("Lodea")
+world.fill_map()
 
 while True:
     client, client_addr = server.accept()

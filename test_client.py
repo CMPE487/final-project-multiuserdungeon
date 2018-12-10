@@ -39,6 +39,7 @@ def test_commands(client):
         call(clear, shell=True)
         print("1. Show userlist")
         print("2. Move")
+        print("3. Show Map")
         input = get_input()
         if input.startswith('1'):
             client.send((HOST_IP + ";show;").encode("utf8"))
@@ -48,6 +49,12 @@ def test_commands(client):
             print("Where?")
             dir = get_input()
             client.send((HOST_IP + ";move;" + dir.upper()[0]).encode("utf8"))
+        elif input.startswith('3'):
+            client.send((HOST_IP + ";map;").encode("utf8"))
+            print("yey")
+            print(client.recv(BUFFER_SIZE).decode("utf8"))
+            get_input()
+
 
 client = socket(AF_INET, SOCK_STREAM)
 client.connect((HOST_IP, APP_PORT)) # Should be SERVER_IP in real clients
