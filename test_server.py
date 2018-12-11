@@ -23,7 +23,10 @@ def handle_client(client, client_addr):
                 print(char.position())
             elif (msg[1] == 'map'):
                 char = userlist[msg[0]]['character']
-                userlist[msg[0]]['client'].send(world.ROOMS[char.x][char.y].display().encode("utf8"))
+                userlist[msg[0]]['client'].send(world.display_map(char.x, char.y).encode("utf8"))
+            elif (msg[1] == 'look'):
+                char = userlist[msg[0]]['character']
+                userlist[msg[0]]['client'].send(world.ROOMS[char.x][char.y].description().encode("utf8"))
         except ConnectionResetError:
             continue
 
