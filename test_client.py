@@ -51,8 +51,13 @@ def test_commands(server):
             server.send((HOST_IP + ";move;" + dir.upper()[0]).encode("utf8"))
         elif input.startswith('map'):
             server.send((HOST_IP + ";map;").encode("utf8"))
-            print("yey")
             print(server.recv(BUFFER_SIZE).decode("utf8"))
+            get_input()
+        elif input.startswith('help'):
+            print("List of commands:")
+            print("user: Shows the list of online users")
+            print("move: This command allows you to move along the direction you specify. The directions are North, South, West, East")
+            print("map: Shows the map and marks your position with *")
             get_input()
 
 
