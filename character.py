@@ -1,8 +1,9 @@
 import json
+from enemy import Battler
 from character_jobs import *
 from config import MapConfig
 
-class Character(Job):
+class Character(Job, Battler):
     def __init__(self, name="Mark", job=Job(), json_data=None):
         if json_data:
             data = json.loads(json_data)
@@ -15,15 +16,6 @@ class Character(Job):
 
     def position(self):
         return "X{0} Y:{1}".format(self.x, self.y)
-
-    def to_json(self):
-        job_i = 0
-        if self.jobname == "Warrior":
-            job_i = 0
-        elif self.jobname == "Mage":
-            job_i = 1
-        data = {'name': self.name, 'job_index': job_i}
-        return json.dumps(data)
 
     def move(self,dir):
         if((dir == 'N') & (self.y  < MapConfig.HEIGHT)):

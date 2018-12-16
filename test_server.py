@@ -1,6 +1,7 @@
 from socket import *
 from config import *
 from character import Character, JOBS
+from enemy import Enemy, Goblin
 from threading import Thread
 from map import Map
 
@@ -27,8 +28,17 @@ def handle_client(client, client_addr):
             elif (msg[1] == 'look'):
                 char = userlist[msg[0]]['character']
                 userlist[msg[0]]['client'].send(world.ROOMS[char.x][char.y].description().encode("utf8"))
+            elif (msg[1] == 'status'):
+                char = userlist[msg[0]]['character']
+                userlist[msg[0]]['client'].send(char.stats_display().encode("utf8"))
+            elif (msg[1] == 'ambush'):
+                char = userlist[msg[0]]['character']
+                Goblin.attack(char)
+                userlist[msg[0]]['client'].send(f"A {Goblin.name} attacked you!".encode("utf8"))
         except ConnectionResetError:
-            continue
+            print(f"Connection reset with {client_addr}!")
+            client.close()
+            break
 
 server = socket(AF_INET, SOCK_STREAM)
 server.bind((HOST_IP, APP_PORT))
@@ -37,6 +47,10 @@ server.listen(MAX_CLIENTS)
 world = Map("Lodea")
 world.fill_map()
 
+threads = {}
+
 while True:
     client, client_addr = server.accept()
-    Thread(target=handle_client, args=(client, client_addr)).start()
+    t = Thread(target=handle_client, args=(client, client_addr))
+    threads[client_addr] = t
+    threads[client_addr].start()

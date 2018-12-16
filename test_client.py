@@ -7,12 +7,6 @@ from sys import stdin
 def get_input():
     return stdin.readline().rstrip(" \n\r")
 
-def __a(word):
-    if word[0] in "aeiouAEIOU":
-        return "an"
-    else:
-        return "a"
-
 def character_creation(server):
     print("You can only have 1 character. If you make a new character the old one will be gone.")
     print("\nEnter your name")
@@ -27,7 +21,6 @@ def character_creation(server):
     job = JOBS[int(job)-1]
     print("Here is the character you created:")
     a = Character(name, job)
-    print(f"{a.name} is {__a(a.jobname)} {a.jobname}")
     print(a.stats_display())
     print("Is this OK? (y/n)")
     input = get_input()
@@ -51,6 +44,14 @@ def test_commands(server):
             server.send((HOST_IP + ";move;" + dir.upper()[0]).encode("utf8"))
         elif input.startswith('map'):
             server.send((HOST_IP + ";map;").encode("utf8"))
+            print(server.recv(BUFFER_SIZE).decode("utf8"))
+            get_input()
+        elif input.startswith('status'):
+            server.send((f'{HOST_IP};status;').encode("utf8"))
+            print(server.recv(BUFFER_SIZE).decode("utf8"))
+            get_input()
+        elif input.startswith('ambush'):
+            server.send((f'{HOST_IP};ambush;').encode("utf8"))
             print(server.recv(BUFFER_SIZE).decode("utf8"))
             get_input()
         elif input.startswith('help'):
