@@ -1,3 +1,5 @@
+import util
+import json
 class Job:
     def __init__(self, copy=None):
         self.desc = ""
@@ -10,8 +12,20 @@ class Job:
             self.hp, self.mp = copy.hp, copy.mp
             self.str, self.end, self.int, self.spd = copy.str, copy.end, copy.int, copy.spd
     def stats_display(self):
-        return "HP: {0} MP: {1}\nStr:{2} End:{3} Int:{4} Spd:{5}".format(
-            self.hp, self.mp, self.str, self.end, self.int, self.spd)
+        return f"{self.name} is {util.a_an(self.jobname)} {self.jobname}\nHP: {self.hp} MP: {self.mp}\nStr:{self.str} End:{ self.end} Int:{self.int} Spd:{self.spd}"
+
+    def to_json(self):
+        job_i = 0
+        if self.jobname == "Warlord":
+            job_i = 0
+        elif self.jobname == "Elementalist":
+            job_i = 1
+        elif self.jobname == "Dragon Knight":
+            job_i = 2
+        elif self.jobname == "Assassin":
+            job_i = 3
+        data = {'name': self.name, 'job_index': job_i}
+        return json.dumps(data)
 
 class Warlord(Job):
     def __init__(self):
