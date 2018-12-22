@@ -6,6 +6,7 @@ class Room(object):
         self.name = "room"
         self.type = "empty"
         self.x , self.y = x, y
+        self.users = []
     def description(self):
         return "This room is empty"
     def display(self):
@@ -18,6 +19,7 @@ class Forest(Room):
       "A comforting breeze blows between the leaves."
     ]
     def __init__(self, x, y):
+        super().__init__(x, y)
         self.name = "Grassy Fields"
         self.type = "Grass"
         self.x, self.y = x, y
@@ -31,6 +33,7 @@ class Well(Room):
       "There is a bucket hanging from a well in front of you, do you want to take some water?"
     ]
     def __init__(self, x, y):
+        super().__init__(x, y)
         self.name = "A Sudden Well"
         self.type = "Water"
         self.x, self.y = x, y
@@ -44,6 +47,7 @@ class Enemy(Room):
       "Wild bird cries come from the skies. Cover your head."
     ]
     def __init__(self, x, y):
+        super().__init__(x, y)
         self.name = "Unexpected Enemy"
         self.type = "Enemy"
         self.x, self.y = x, y

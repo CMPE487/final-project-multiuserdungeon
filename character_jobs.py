@@ -13,6 +13,8 @@ class Job:
             self.str, self.end, self.int, self.spd = copy.str, copy.end, copy.int, copy.spd
     def stats_display(self):
         return f"{self.name} is {util.a_an(self.jobname)} {self.jobname}\nHP: {self.hp} MP: {self.mp}\nStr:{self.str} End:{ self.end} Int:{self.int} Spd:{self.spd}"
+    def short_display(self):
+        return f"{self.name} - {self.jobname}"
 
     def to_json(self):
         job_i = 0
