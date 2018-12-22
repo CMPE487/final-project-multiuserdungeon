@@ -1,4 +1,5 @@
 import json
+from threading import Timer
 
 class Battler:
     def calc_damage(attacker, defender):
@@ -20,4 +21,10 @@ class Enemy(Battler):
     def __init__(self, json_data):
         Battler.__init__(self, json_data)
 
+    def attack(self, other):
+        print(f"aaa : {other.hp}")
+        if other.hp > 0:
+            Battler.attack(self, other)
+            t = Timer(2, self.attack, [other])
+            t.start()
 Goblin = Enemy(json.dumps({'name': 'Goblin', 'hp': 10, 'str': 5, 'end': 5}))
