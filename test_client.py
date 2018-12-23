@@ -4,6 +4,7 @@ from character import Character, JOBS
 from subprocess import call
 from sys import stdin
 from threading import Thread
+import os
 
 BATTLE_MSG = ""
 
@@ -37,6 +38,7 @@ def test_commands(server):
         room_desc = server.recv(BUFFER_SIZE).decode("utf8")
         print(room_desc)
         print(BATTLE_MSG)
+        BATTLE_MSG = ""
         _input = get_input()
         if _input.startswith('user'):
             server.send((HOST_IP + ";show;").encode("utf8"))
@@ -71,6 +73,9 @@ def test_commands(server):
             print("move: This command allows you to move along the direction you specify. The directions are North, South, West, East")
             print("map: Shows the map and marks your position with *")
             get_input()
+        elif _input == "exit":
+            print("Goodbye!")
+            os.__exit(0)
 
 def listen_server(listen):
     global BATTLE_MSG

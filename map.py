@@ -54,9 +54,9 @@ class Enemy(Room):
         self.type = "Enemy"
         self.x, self.y = x, y
         self.text = self.texts[randrange(3)]
-        self.enemy = enemy.Enemy(enemy.goblin_stats)
+        self.enemy = enemy.Enemy(enemy.big_stats)
     def description(self):
-        return self.text
+        return f"{self.text}\n{self.enemy.name.upper()} attacks!!!"
 
 ROOMTYPES = [Forest, Well, Enemy]
 

@@ -67,4 +67,5 @@ class Enemy(Battler):
             str = self.attack()
             client_.send(str.encode("utf8"))
 
+big_stats = json.dumps({'name': 'Big Guy', 'hp': 50, 'str': 0, 'end': 5})
 goblin_stats = json.dumps({'name': 'Goblin', 'hp': 5, 'str': 3, 'end': 3})
