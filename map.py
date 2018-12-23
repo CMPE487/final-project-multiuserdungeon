@@ -1,5 +1,6 @@
 from random import randint, randrange
 from config import MapConfig
+import enemy
 
 class Room(object):
     def __init__(self, x, y):
@@ -7,6 +8,7 @@ class Room(object):
         self.type = "empty"
         self.x , self.y = x, y
         self.users = []
+        self.enemy = None
     def description(self):
         return "This room is empty"
     def display(self):
@@ -52,6 +54,7 @@ class Enemy(Room):
         self.type = "Enemy"
         self.x, self.y = x, y
         self.text = self.texts[randrange(3)]
+        self.enemy = enemy.Enemy(enemy.goblin_stats)
     def description(self):
         return self.text
 

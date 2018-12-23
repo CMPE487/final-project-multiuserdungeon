@@ -37,8 +37,9 @@ class Character(Job, Battler):
     def attack(self, other):
         if self.__charge > 0:
             self.__charge = 0
-            Battler.attack(self, other)
+            str = Battler.attack(self, other)    
             t = Timer(5 / self.spd, self.__gain_charge)
             t.start()
+            return str
         else:
-            print("You are out of balance!")
+            return "You are out of balance"

@@ -4,3 +4,6 @@ def a_an(word):
         return "an"
     else:
         return "a"
+
+def endl():
+    return  "\n"
