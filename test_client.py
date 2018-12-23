@@ -6,8 +6,6 @@ from sys import stdin
 from threading import Thread
 import os
 
-BATTLE_MSG = ""
-
 def get_input():
     return stdin.readline().rstrip("\n\r")
 
@@ -17,7 +15,7 @@ def character_creation(server):
     name = get_input()
     print("Choose a class (1, 2..)")
     for i in range(0, len(JOBS)):
-        print("{i}. {job}".format(i=i+1, job=JOBS[i].name))
+        print(f"{i+1}. {JOBS[i].name}\n{JOBS[i].desc}")
     job = get_input()
     while not job.isdecimal():
         print("Please enter the number next to the class you want.")
@@ -32,14 +30,14 @@ def character_creation(server):
         server.send((HOST_IP + ";create;" + a.to_json()).encode("utf8"))
 
 def test_commands(server):
-    global BATTLE_MSG
-    while True:
+    while not Dead.check:
         call(clear, shell=True)
         server.send(f"{HOST_IP};look;".encode("utf8"))
         room_desc = server.recv(BUFFER_SIZE).decode("utf8")
         print(room_desc)
-        print(BATTLE_MSG)
-        BATTLE_MSG = ""
+        if BattleConfig.MSG != "":
+            print(BattleConfig.MSG)
+        BattleConfig.MSG = ""
         _input = get_input()
         if _input.startswith('user'):
             server.send((HOST_IP + ";show;").encode("utf8"))
@@ -60,6 +58,10 @@ def test_commands(server):
             server.send((f'{HOST_IP};status;').encode("utf8"))
             print(server.recv(BUFFER_SIZE).decode("utf8"))
             get_input()
+        elif _input.startswith('drink'):
+            server.send((f'{HOST_IP};drink;').encode("utf8"))
+            print(server.recv(BUFFER_SIZE).decode("utf8"))
+            get_input()
         elif _input.startswith('attack'):
             server.send(f'{HOST_IP};attack;'.encode("utf8"))
             print(server.recv(BUFFER_SIZE).decode("utf8"))
@@ -76,12 +78,30 @@ def test_commands(server):
             get_input()
         elif _input == "exit":
             print("Goodbye!")
-            os.__exit(0)
-
+            os._exit(0)
 def listen_server(listen):
-    global BATTLE_MSG
     while True:
-        BATTLE_MSG += listen.recv(BUFFER_SIZE).decode("utf8") + "\n"
+        msg = listen.recv(BUFFER_SIZE).decode("utf8")
+        if msg == "You are dead":
+            print(msg.upper())
+            get_input()
+            os._exit(0)
+        else:
+            BattleConfig.MSG += '\n' + msg
+def start():
+    call(clear, shell=True)
+    print(TITLE_SCREEN)
+    get_input()
+    while True:
+        call(clear, shell=True)
+        print("Welcome!")
+        print("1. Make a character")
+        print("2. Start adventure")
+        _input = get_input()
+        if _input.startswith('1'):
+            character_creation(server)
+        elif _input.startswith('2'):
+            test_commands(server)
 
 server = socket(AF_INET, SOCK_STREAM)
 server.connect((SERVER_IP, APP_PORT)) # Should be SERVER_IP in real servers
@@ -89,13 +109,4 @@ listen = socket(AF_INET, SOCK_STREAM)
 listen.connect((SERVER_IP, LIS_PORT))
 Thread(target=listen_server, args=[listen]).start()
 
-while True:
-    call(clear, shell=True)
-    print("Welcome!")
-    print("1. Make a character")
-    print("2. Start adventure")
-    _input = get_input()
-    if _input.startswith('1'):
-        character_creation(server)
-    elif _input.startswith('2'):
-        test_commands(server)
+start()

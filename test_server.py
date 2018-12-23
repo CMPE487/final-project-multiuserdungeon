@@ -14,6 +14,10 @@ def move(ip, char, to):
 def handle_client(client, client_, client_addr):
     while True:
         try:
+            if client_addr[0] in userlist:
+                if not userlist[client_addr[0]]['character'].is_alive():
+                    client_.send("You are dead".encode("utf8"))
+
             msg = client.recv(BUFFER_SIZE)
             msg = msg.decode("utf8").split(";", 3)
             if (msg[1] == 'create'):
@@ -21,8 +25,17 @@ def handle_client(client, client_, client_addr):
                 userlist[msg[0]] = {"character": a, "client": client}
                 world.ROOMS[a.x][a.y].users.append(msg[0])
             elif (msg[1] == 'show'):
+                msg = ""
                 for k, v in userlist.items():
-                    userlist[msg[0]]["client"].send((f"{k} : {v['character'].name}").encode("utf8"))
+                    msg += f"{k} : {v['character'].name}\n"
+                client.send(msg.encode("utf8"))
+            elif (msg[1] == 'drink'):
+                char = userlist[msg[0]]["character"]
+                if (world.ROOMS[char.x][char.y].type == "Water"):
+                    char.hp = char.maxhp
+                    client.send(f"The water refreshes you. You now have {char.hp} hit points.".encode("utf8"))
+                else:
+                    client.send("There is no well here".encode("utf8"))
             elif (msg[1] == 'move'):
                 char = userlist[msg[0]]["character"]
                 move(msg[0], char, msg[2])
@@ -36,7 +49,9 @@ def handle_client(client, client_, client_addr):
             elif (msg[1] == 'look'):
                 char = userlist[msg[0]]['character']
                 s = world.ROOMS[char.x][char.y].description() + "\n"
-                s += '\n'.join(list(map(lambda x: userlist[x]['character'].short_display() + ' is here', world.ROOMS[char.x][char.y].users)))
+                userswithoutme = world.ROOMS[char.x][char.y].users.copy()
+                userswithoutme.remove(msg[0])
+                s += '\n'.join(list(map(lambda x: userlist[x]['character'].short_display() + ' is here', userswithoutme)))
                 userlist[msg[0]]['client'].send(s.encode("utf8"))
             elif (msg[1] == 'status'):
                 char = userlist[msg[0]]['character']
@@ -46,7 +61,9 @@ def handle_client(client, client_, client_addr):
                 enemy = world.ROOMS[char.x][char.y].enemy
                 battle_string = ""
                 if enemy:
+                    print("aata")
                     battle_string = char.attack(enemy)
+                    print("apsoefe")
                     if not enemy.is_alive():
                         world.ROOMS[char.x][char.y].enemy = None
                 else:
@@ -58,6 +75,9 @@ def handle_client(client, client_, client_addr):
                 userlist[msg[0]]['client'].send(f"Gobin hp: {Goblin.hp}!".encode("utf8"))
         except ConnectionResetError:
             print(f"Connection reset with {client_addr}!")
+            char = userlist[client_addr[0]]['character']
+            world.ROOMS[char.x][char.y].users.remove(client_addr[0])
+            userlist.pop(client_addr[0], None)
             client.close()
             break
 

@@ -3,13 +3,13 @@ import time
 from threading import Timer, Thread
 from random import randrange
 from util import endl
-from config import BATTLE_STRING
 
 class Battler:
     def calc_damage(attacker, defender):
         if attacker.str == 0:
             return 0
-        return attacker.str / (1 + defender.end / attacker.str)
+        return int(attacker.str / (1 + defender.end / attacker.str))
+
     def __init__(self, json_data):
         data = json.loads(json_data)
         self.name = data['name']
@@ -69,5 +69,6 @@ class Enemy(Battler):
             str = self.attack()
             client_.send(str.encode("utf8"))
 
+dragon_stats = json.dumps({'name': 'Dragon', 'hp': 50, 'str': 8, 'end': 5})
 big_stats = json.dumps({'name': 'Big Guy', 'hp': 50, 'str': 0, 'end': 5})
 goblin_stats = json.dumps({'name': 'Goblin', 'hp': 5, 'str': 3, 'end': 3})

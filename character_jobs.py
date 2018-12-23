@@ -1,6 +1,9 @@
 import util
 import json
-class Job:
+from enemy import Battler
+from threading import Timer
+
+class Job(Battler):
     def __init__(self, copy=None):
         self.desc = ""
         if copy is None:
@@ -11,10 +14,25 @@ class Job:
             self.name = copy.name
             self.hp, self.mp = copy.hp, copy.mp
             self.str, self.end, self.int, self.spd = copy.str, copy.end, copy.int, copy.spd
+        self.__charge = 1
+
     def stats_display(self):
         return f"{self.name} is {util.a_an(self.jobname)} {self.jobname}\nHP: {self.hp} MP: {self.mp}\nStr:{self.str} End:{ self.end} Int:{self.int} Spd:{self.spd}"
     def short_display(self):
         return f"{self.name} - {self.jobname}"
+
+    def __gain_charge(self):
+        self.__charge += 1
+
+    def attack(self, other):
+        if self.__charge > 0:
+            self.__charge = 0
+            str = Battler.attack(self, other)
+            t = Timer(5 / self.spd, self.__gain_charge)
+            t.start()
+            return str
+        else:
+            return "You are out of balance"
 
     def to_json(self):
         job_i = 0

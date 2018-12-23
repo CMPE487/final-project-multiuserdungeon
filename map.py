@@ -53,12 +53,27 @@ class Enemy(Room):
         self.name = "Unexpected Enemy"
         self.type = "Enemy"
         self.x, self.y = x, y
-        self.text = self.texts[randrange(3)]
-        self.enemy = enemy.Enemy(enemy.big_stats)
+        self.text = self.texts[randrange(len(self.texts))]
+        self.enemy = enemy.Enemy(enemy.goblin_stats)
     def description(self):
-        return f"{self.text}\n{self.enemy.name.upper()} attacks!!!"
+        if self.enemy:
+            return f"{self.text}\n{self.enemy.name.upper()} attacks!!!"
+        else:
+            return self.text
 
-ROOMTYPES = [Forest, Well, Enemy]
+class Shrine(Room):
+    texts = [
+        "A peculiar shrine lies in the middle of the dark room. It is well lit."
+    ]
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.name = "A Dark Shrine"
+        self.type = "Shrine"
+        self.x, self.y = x, y
+        self.text = self.texts[randrange(len(self.texts))]
+    def description(self):
+        return self.text
+ROOMTYPES = [Forest, Well, Enemy, Shrine]
 
 class Map(object):
     def __init__(self, name, height = MapConfig.HEIGHT, width = MapConfig.WIDTH):
@@ -70,7 +85,7 @@ class Map(object):
     def fill_map(self):
         for dirX in range(self.width):
             for dirY in range(self.height):
-                self.ROOMS[dirX][dirY] = ROOMTYPES[randrange(3)](dirX, dirY)
+                self.ROOMS[dirX][dirY] = ROOMTYPES[randrange(len(ROOMTYPES))](dirX, dirY)
 
     def display_map(self, char_x, char_y):
         str = ""
