@@ -32,6 +32,7 @@ def character_creation(server):
         server.send((HOST_IP + ";create;" + a.to_json()).encode("utf8"))
 
 def test_commands(server):
+    global BATTLE_MSG
     while True:
         call(clear, shell=True)
         server.send(f"{HOST_IP};look;".encode("utf8"))
