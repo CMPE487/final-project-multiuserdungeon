@@ -7,6 +7,8 @@ from config import BATTLE_STRING
 
 class Battler:
     def calc_damage(attacker, defender):
+        if attacker.str == 0:
+            return 0
         return attacker.str / (1 + defender.end / attacker.str)
     def __init__(self, json_data):
         data = json.loads(json_data)
