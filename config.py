@@ -3,7 +3,7 @@ import os
 
 HOST_IP = gethostbyname(gethostname())
 # I don't want to do another discovery, but I guess we will have to
-SERVER_IP = '192.168.4.114'
+SERVER_IP = '192.168.61.34'
 APP_PORT = 3726
 LIS_PORT = 3727
 BUFFER_SIZE = 1024

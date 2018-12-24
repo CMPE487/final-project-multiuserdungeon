@@ -85,7 +85,13 @@ class Map(object):
     def fill_map(self):
         for dirX in range(self.width):
             for dirY in range(self.height):
-                self.ROOMS[dirX][dirY] = ROOMTYPES[randrange(len(ROOMTYPES))](dirX, dirY)
+                if dirX == 0 and dirY == 0:
+                    self.ROOMS[dirX][dirY] = ROOMTYPES[0](dirX, dirY)
+                elif dirX == 5 and dirY == 5:
+                    self.ROOMS[dirX][dirY] = ROOMTYPES[2](dirX, dirY)
+                    self.ROOMS[dirX][dirY].enemy = enemy.Enemy(enemy.dragon_stats)
+                else:
+                    self.ROOMS[dirX][dirY] = ROOMTYPES[randrange(len(ROOMTYPES))](dirX, dirY)
 
     def display_map(self, char_x, char_y):
         str = ""

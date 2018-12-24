@@ -16,6 +16,7 @@ def handle_client(client, client_, client_addr):
         try:
             if client_addr[0] in userlist:
                 if not userlist[client_addr[0]]['character'].is_alive():
+                    print("Some one died")
                     client_.send("You are dead".encode("utf8"))
 
             msg = client.recv(BUFFER_SIZE)
@@ -69,10 +70,7 @@ def handle_client(client, client_, client_addr):
                 else:
                     battle_string = "There are no enemies here"
                 userlist[msg[0]]['client'].send(battle_string.encode("utf8"))
-            elif (msg[1] == 'ambush'):
-                char = userlist[msg[0]]['character']
-                Thread(target=Goblin.combat_ai, args=([char], None)).start()
-                userlist[msg[0]]['client'].send(f"Gobin hp: {Goblin.hp}!".encode("utf8"))
+
         except ConnectionResetError:
             print(f"Connection reset with {client_addr}!")
             char = userlist[client_addr[0]]['character']
@@ -91,6 +89,7 @@ broadcast.listen(MAX_CLIENTS)
 
 world = Map("Lodea")
 world.fill_map()
+print("server initialized")
 
 threads = {}
 
